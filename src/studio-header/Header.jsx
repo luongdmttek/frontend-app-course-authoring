@@ -21,6 +21,7 @@ ensureConfig([
   'STUDIO_BASE_URL',
   'LOGOUT_URL',
   'LOGIN_URL',
+  'LOGO_URL',
 ], 'Header component');
 
 function Header({
@@ -154,7 +155,7 @@ function Header({
   );
 
   const props = {
-    logo: StudioLogoSVG,
+    logo: config.LOGO_URL,
     logoAltText: 'Studio edX',
     siteName: 'edX',
     logoDestination: config.STUDIO_BASE_URL,

@@ -2,9 +2,11 @@ import React, { useContext, useEffect, Suspense } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { PageRoute, AppContext } from '@edx/frontend-platform/react';
+import { getConfig } from '@edx/frontend-platform';
 
 import { Switch, useRouteMatch } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
+import { Helmet } from 'react-helmet';
 
 import { Button, Hyperlink } from '@edx/paragon';
 import messages from './messages';
@@ -39,6 +41,9 @@ function PagesAndResources({ courseId, intl }) {
 
   return (
     <PagesAndResourcesProvider courseId={courseId}>
+      <Helmet>
+        <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
+      </Helmet>
       <main className="container container-mw-md px-3">
         <div className="d-flex justify-content-between my-4 my-md-5 align-items-center">
           <h3 className="m-0">{intl.formatMessage(messages.heading)}</h3>

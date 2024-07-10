@@ -11,6 +11,7 @@ const ScheduleSection = ({
   endDate,
   startDate,
   errorFields,
+  isInstructor,
   platformName,
   enrollmentEnd,
   enrollmentStart,
@@ -44,6 +45,7 @@ const ScheduleSection = ({
       helpText: intl.formatMessage(messages.scheduleCourseStartDateHelpText),
       controlName: 'startDate',
       errorFeedback: errorFields?.startDate,
+      readonly: isInstructor == true ? false : true,
     },
     {
       labels: [
@@ -55,6 +57,7 @@ const ScheduleSection = ({
       helpText: intl.formatMessage(messages.scheduleCourseEndDateHelpText),
       controlName: 'endDate',
       errorFeedback: errorFields?.endDate,
+      readonly: isInstructor == true ? false : true,
     },
     {
       skip: !canShowCertificateAvailableDateField,
@@ -75,6 +78,7 @@ const ScheduleSection = ({
       helpText: intl.formatMessage(messages.scheduleEnrollmentStartDateHelpText),
       controlName: 'enrollmentStart',
       errorFeedback: errorFields?.enrollmentStart,
+      readonly: isInstructor == true ? false : true,
     },
     {
       labels: [
@@ -87,6 +91,7 @@ const ScheduleSection = ({
       readonly: !enrollmentEndEditable,
       controlName: 'enrollmentEnd',
       errorFeedback: errorFields?.enrollmentEnd,
+      readonly: isInstructor == true ? false : true,
     },
     {
       skip: !upgradeDeadline,
@@ -146,6 +151,7 @@ ScheduleSection.defaultProps = {
   endDate: '',
   startDate: '',
   errorFields: {},
+  isInstructor: false,
   enrollmentEnd: '',
   enrollmentStart: '',
   upgradeDeadline: '',
@@ -156,6 +162,7 @@ ScheduleSection.propTypes = {
   endDate: PropTypes.string,
   startDate: PropTypes.string,
   errorFields: PropTypes.objectOf(PropTypes.string),
+  isInstructor: PropTypes.bool.isRequired,
   platformName: PropTypes.string.isRequired,
   enrollmentEnd: PropTypes.string,
   enrollmentStart: PropTypes.string,

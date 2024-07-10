@@ -44,7 +44,7 @@ const DatepickerControl = ({
         )}
       </Form.Label>
       <div className="position-relative">
-        {type === DATEPICKER_TYPES.date && !readonly && (
+        {type === DATEPICKER_TYPES.date && (
           <Icon
             src={Calendar}
             className="datepicker-custom-control-icon"

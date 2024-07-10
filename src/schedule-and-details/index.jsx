@@ -122,6 +122,7 @@ const ScheduleAndDetails = ({ intl, courseId }) => {
     startDate,
     introVideo,
     description,
+    isInstructor,
     learningInfo,
     enrollmentEnd,
     instructorInfo,
@@ -257,6 +258,7 @@ const ScheduleAndDetails = ({ intl, courseId }) => {
                     endDate={endDate}
                     startDate={startDate}
                     errorFields={errorFields}
+                    isInstructor={isInstructor}
                     platformName={platformName}
                     enrollmentEnd={enrollmentEnd}
                     enrollmentStart={enrollmentStart}

@@ -17,7 +17,7 @@ export const getContentMenuItems = ({ studioBaseUrl, courseId, intl }) => {
       title: intl.formatMessage(messages['header.links.pages']),
     },
     {
-      href: `${studioBaseUrl}/assets/${courseId}`,
+      href: `https://insights.lms.hutech.edu.vn/file/browser?prefix=${courseId}/`,
       title: intl.formatMessage(messages['header.links.filesAndUploads']),
     },
   ];

@@ -25,6 +25,8 @@ const slice = createSlice({
       activeOnly: undefined,
       isFiltered: false,
       cleanFilters: false,
+      orgDefault: undefined,
+      run: undefined,
     },
   },
   reducers: {

@@ -28,7 +28,7 @@ const HomeSidebar = () => {
   const isShowDeniedInstruction = courseCreatorStatus === COURSE_CREATOR_STATES.denied;
 
   return (
-    <HelpSidebar>
+    <HelpSidebar className="d-none d-sm-block">
       <h4 className="help-sidebar-about-title">
         {intl.formatMessage(messages.aboutTitle, { studioName })}
       </h4>

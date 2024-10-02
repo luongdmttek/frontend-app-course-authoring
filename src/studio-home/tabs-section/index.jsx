@@ -34,7 +34,7 @@ const TabsSection = ({
     libraryAuthoringMfeUrl,
     redirectToLibraryAuthoringMfe,
     courses, librariesEnabled, libraries, archivedCourses,
-    numPages, coursesCount,
+    numPages, coursesCount, runList, orgDefaultList,
   } = useSelector(getStudioHomeData);
   const {
     courseLoadingStatus,
@@ -57,6 +57,8 @@ const TabsSection = ({
       >
         <CoursesTab
           coursesDataItems={courses}
+          courseRunList={runList}
+          orgDefaultList={orgDefaultList}
           showNewCourseContainer={showNewCourseContainer}
           onClickNewCourse={onClickNewCourse}
           isShowProcessing={isShowProcessing}

@@ -25,6 +25,8 @@ const slice = createSlice({
       activeOnly: undefined,
       isFiltered: false,
       cleanFilters: false,
+      orgDefault: undefined,
+      run: undefined,
     },
   },
   reducers: {
@@ -45,10 +47,12 @@ const slice = createSlice({
     },
     fetchCourseDataSuccessV2: (state, { payload }) => {
       const { courses, archivedCourses = [], inProcessCourseActions } = payload.results;
-      const { numPages, count } = payload;
+      const { numPages, count, runList, orgDefaultList } = payload;
       state.studioHomeData.courses = courses;
       state.studioHomeData.archivedCourses = archivedCourses;
       state.studioHomeData.inProcessCourseActions = inProcessCourseActions;
+      state.studioHomeData.runList = runList;
+      state.studioHomeData.orgDefaultList = orgDefaultList;
       state.studioHomeData.numPages = numPages;
       state.studioHomeData.coursesCount = count;
     },

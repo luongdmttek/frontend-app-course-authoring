@@ -1,26 +1,76 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-import { Icon, Dropdown } from '@openedx/paragon';
+import { useDispatch, useSelector } from 'react-redux';
+import { Icon, Dropdown, Form } from '@openedx/paragon';
 import { Check } from '@openedx/paragon/icons';
 import { getStudioHomeCoursesParams } from '../../../../data/selectors';
+import { updateStudioHomeCoursesCustomParams } from '../../../../data/slice';
+import { useIntl } from '@edx/frontend-platform/i18n';
+import messages from './messages';
+import './index.scss';
 
 const CoursesFilterMenu = ({
   id: idProp,
   menuItems,
   onItemMenuSelected,
   defaultItemSelectedText,
+  useCustomMenu,
 }) => {
+  const intl = useIntl();
+  const dispatch = useDispatch();
+  const [firstFilter, setfirstFilter] = useState(['allCourses', 'azCourses', 'allOrganization', 'allCourseRun']);
   const [itemMenuSelected, setItemMenuSelected] = useState(defaultItemSelectedText);
   const { cleanFilters } = useSelector(getStudioHomeCoursesParams);
   const handleCourseTypeSelected = (name, value) => {
     setItemMenuSelected(name);
     onItemMenuSelected(value);
+    
+    dispatch(updateStudioHomeCoursesCustomParams({
+      showCleanFilterButton: firstFilter.includes(value) ? false : true,
+      
+    }));
   };
 
   const courseTypeSelectedIcon = (itemValue) => (itemValue === itemMenuSelected ? (
     <Icon src={Check} className="ml-2" data-testid="menu-item-icon" />
   ) : null);
+
+  // forwardRef again here!
+  // Dropdown needs access to the DOM of the Menu to measure it
+  const CustomMenu = React.forwardRef(
+    ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
+      const [value, setValue] = useState('');
+
+      return (
+        <div
+          ref={ref}
+          style={style}
+          className={className}
+          aria-labelledby={labeledBy}
+        >
+          <Form.Control
+            autoFocus
+            className="mx-3 my-2 w-auto"
+            placeholder={intl.formatMessage(messages.coursesOrderFilterMenuPlacehoder)}
+            onChange={(e) => setValue(e.target.value)}
+            value={value}
+          />
+          <ul className="list-unstyled">
+            {React.Children.toArray(children).filter(
+              (child) =>
+                !value || String(
+                  Array.isArray(child.props.children)
+                    ? child.props.children[0] // usually the name
+                    : child.props.children
+                )
+                  .toLowerCase()
+                  .includes(value.toLowerCase())
+            )}
+          </ul>
+        </div>
+      );
+    },
+  );
 
   useEffect(() => {
     if (cleanFilters) {
@@ -39,7 +89,10 @@ const CoursesFilterMenu = ({
       >
         {itemMenuSelected}
       </Dropdown.Toggle>
-      <Dropdown.Menu>
+      <Dropdown.Menu
+        as={useCustomMenu ? CustomMenu : undefined}
+          className="limit-height"
+      >
         {menuItems.map(({ id, name, value }) => (
           <Dropdown.Item
             key={id}

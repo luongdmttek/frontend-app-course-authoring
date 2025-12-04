@@ -6,6 +6,7 @@ import {
   getStudioHomeCourses,
   getStudioHomeLibraries,
   getStudioHomeCoursesV2,
+  getCourseRunAndOrganization,
 } from './api';
 import {
   fetchStudioHomeDataSuccess,
@@ -14,6 +15,7 @@ import {
   updateSavingStatuses,
   fetchLibraryDataSuccess,
   fetchCourseDataSuccessV2,
+  fetchCourseRunAndOrganizationSuccess,
 } from './slice';
 
 function fetchStudioHomeData(
@@ -102,10 +104,27 @@ function requestCourseCreatorQuery() {
   };
 }
 
+function fetchCourseRunAndOrganization() {
+  return async (dispatch) => {
+    dispatch(updateSavingStatuses({ courseCreatorSavingStatus: RequestStatus.PENDING }));
+
+    try {
+      const data = await getCourseRunAndOrganization();
+      dispatch(fetchCourseRunAndOrganizationSuccess(data));
+      dispatch(updateSavingStatuses({ courseCreatorSavingStatus: RequestStatus.SUCCESSFUL }));
+      return true;
+    } catch (error) {
+      dispatch(updateSavingStatuses({ courseCreatorSavingStatus: RequestStatus.FAILED }));
+      return false;
+    }
+  };
+}
+
 export {
   fetchStudioHomeData,
   fetchOnlyStudioHomeData,
   fetchLibraryData,
+  fetchCourseRunAndOrganization,
   requestCourseCreatorQuery,
   handleDeleteNotificationQuery,
 };

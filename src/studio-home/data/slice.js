@@ -25,6 +25,9 @@ const slice = createSlice({
       activeOnly: undefined,
       isFiltered: false,
       cleanFilters: false,
+      showCleanFilterButton: false,
+      orgDefault: undefined,
+      run: undefined,
     },
   },
   reducers: {
@@ -45,16 +48,23 @@ const slice = createSlice({
     },
     fetchCourseDataSuccessV2: (state, { payload }) => {
       const { courses, archivedCourses = [], inProcessCourseActions } = payload.results;
-      const { numPages, count } = payload;
+      const { numPages, count, runList, orgDefaultList } = payload;
       state.studioHomeData.courses = courses;
       state.studioHomeData.archivedCourses = archivedCourses;
       state.studioHomeData.inProcessCourseActions = inProcessCourseActions;
+      state.studioHomeData.runList = runList;
+      state.studioHomeData.orgDefaultList = orgDefaultList;
       state.studioHomeData.numPages = numPages;
       state.studioHomeData.coursesCount = count;
     },
     fetchLibraryDataSuccess: (state, { payload }) => {
       const { libraries } = payload;
       state.studioHomeData.libraries = libraries;
+    },
+    fetchCourseRunAndOrganizationSuccess: (state, { payload }) => {
+      const { courseRun, courseOrgDefault } = payload.data;
+      state.studioHomeData.courseRun = courseRun;
+      state.studioHomeData.courseOrgDefault = courseOrgDefault;
     },
     updateStudioHomeCoursesCustomParams: (state, { payload }) => {
       Object.assign(state.studioHomeCoursesRequestParams, payload);
@@ -70,6 +80,7 @@ export const {
   fetchCourseDataSuccessV2,
   fetchLibraryDataSuccess,
   updateStudioHomeCoursesCustomParams,
+  fetchCourseRunAndOrganizationSuccess,
 } = slice.actions;
 
 export const {

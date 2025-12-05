@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { SearchField } from '@openedx/paragon';
 import { debounce } from 'lodash';
 import { useIntl } from '@edx/frontend-platform/i18n';
+import { getConfig } from '@edx/frontend-platform';
 
 import { getStudioHomeCoursesParams } from '../../../data/selectors';
 import { updateStudioHomeCoursesCustomParams } from '../../../data/slice';
@@ -32,6 +33,7 @@ const CoursesFilters = ({
   orgDefaultList,
 }) => {
   const intl = useIntl();
+  const isPaginated = getConfig().ENABLE_HOME_PAGE_COURSE_API_V2;
   const [allOrgOrderList, setAllOrgOrderList] = useState([]);
   const [allRunOrderList, setAllRunOrderList] = useState([]);
   const studioHomeCoursesParams = useSelector(getStudioHomeCoursesParams);
@@ -83,8 +85,10 @@ const CoursesFilters = ({
   }
 
   useEffect(() => {
-    getCourseRunList();
-    getOrganizationList();
+    if(isPaginated) {
+      getCourseRunList();
+      getOrganizationList();
+    }
   }, [])
 
   const objAllCourseRun = (baseFilters) => Object.fromEntries(
@@ -198,8 +202,12 @@ const CoursesFilters = ({
 
       <CoursesTypesFilterMenu onItemMenuSelected={handleMenuFilterItemSelected} />
       <CoursesOrderFilterMenu onItemMenuSelected={handleMenuFilterItemSelected} />
-      <CoursesOrgFilterMenu onItemMenuSelected={handleMenuFilterItemSelected} filterOrgData={allOrgOrderList} />
-      <CoursesRunFilterMenu onItemMenuSelected={handleMenuFilterItemSelected} filterRunData={allRunOrderList} />
+      {isPaginated && 
+        <>
+          <CoursesOrgFilterMenu onItemMenuSelected={handleMenuFilterItemSelected} filterOrgData={allOrgOrderList} />
+          <CoursesRunFilterMenu onItemMenuSelected={handleMenuFilterItemSelected} filterRunData={allRunOrderList} />
+        </>
+      }
     </div>
   );
 };

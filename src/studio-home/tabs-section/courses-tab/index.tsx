@@ -151,7 +151,7 @@ const CoursesTab: React.FC<Props> = ({
       <div className="courses-tab-container">
         {isShowProcessing && !isEnabledPagination && <ProcessingCourses />}
         {isEnabledPagination && (
-          <div className="d-flex flex-row /*justify-content-between*/ my-4">
+          <div className="d-flex flex-row justify-content-between my-4">
             <CoursesFilters
               dispatch={dispatch} 
               locationValue={locationValue} 

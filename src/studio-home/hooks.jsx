@@ -43,14 +43,6 @@ const useStudioHome = () => {
   }, [location.search]);
 
   useEffect(() => {
-    if (isPaginated) {
-      const firstPage = 1;
-      dispatch(fetchCourseRunAndOrganization())
-      dispatch(fetchStudioHomeData(location.search ?? '', false, { page: firstPage, order: 'display_name' }, true));
-    }
-  }, []);
-
-  useEffect(() => {
     if (courseCreatorSavingStatus === RequestStatus.SUCCESSFUL) {
       dispatch(updateSavingStatuses({ courseCreatorSavingStatus: '' }));
       dispatch(fetchStudioHomeData());
@@ -66,6 +58,14 @@ const useStudioHome = () => {
     }
   }, [deleteNotificationSavingStatus]);
 
+  useEffect(() => {
+    if (isPaginated) {
+      const firstPage = 1;
+      dispatch(fetchCourseRunAndOrganization())
+      dispatch(fetchStudioHomeData(location.search ?? '', false, { page: firstPage, order: 'display_name' }, true));
+    }
+  }, []);
+  
   const {
     allowCourseReruns,
     rerunCreatorStatus,

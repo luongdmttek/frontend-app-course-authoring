@@ -18,7 +18,7 @@ const CoursesFilterMenu = ({
 }) => {
   const intl = useIntl();
   const dispatch = useDispatch();
-  const [firstFilter, setfirstFilter] = useState(['allCourses', 'azCourses', 'allOrganization', 'allCourseRun']);
+  const [firstFilter, setfirstFilter] = useState(['allCourses', 'activeCourses', 'azCourses', 'allOrganization', 'allCourseRun']);
   const [itemMenuSelected, setItemMenuSelected] = useState(defaultItemSelectedText);
   const { cleanFilters } = useSelector(getStudioHomeCoursesParams);
   const handleCourseTypeSelected = (name, value) => {

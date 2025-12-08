@@ -155,7 +155,7 @@ const CoursesFilters = ({
     const valueFormatted = searchValueDebounced.trim();
     const filterParams = {
       search: valueFormatted.length > 0 ? valueFormatted : undefined,
-      activeOnly,
+      activeOnly: true,
       archivedOnly,
       order,
       orgDefault,

@@ -121,7 +121,7 @@ const CoursesTab: React.FC<Props> = ({
       run: undefined,
     };
 
-    dispatch(fetchStudioHomeData(locationValue, false, { page: 1, order: 'display_name' }, true));
+    dispatch(fetchStudioHomeData(locationValue, false, { page: 1, order: 'display_name', activeOnly: true }, true));
     dispatch(updateStudioHomeCoursesCustomParams(customParams));
   };
 

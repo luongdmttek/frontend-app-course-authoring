@@ -174,7 +174,7 @@ const CoursesTab: React.FC<Props> = ({
             )}
             <p data-testid="pagination-info" className='my-2'>
               {intl.formatMessage(messages.coursesPaginationInfo, {
-                length: coursesDataItems.length,
+                length: coursesCount < 10 ? coursesCount%10 : (currentPage-1)*10 + coursesDataItems.length,
                 total: coursesCount,
               })}
             </p>

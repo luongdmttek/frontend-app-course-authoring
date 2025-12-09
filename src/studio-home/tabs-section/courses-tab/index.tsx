@@ -116,12 +116,12 @@ const CoursesTab: React.FC<Props> = ({
       showCleanFilterButton: false,
       cleanFilters: true,
       archivedOnly: undefined,
-      activeOnly: undefined,
+      activeOnly: true,
       orgDefault: undefined,
       run: undefined,
     };
 
-    dispatch(fetchStudioHomeData(locationValue, false, { page: 1, order: 'display_name', activeOnly: true }, true));
+    // dispatch(fetchStudioHomeData(locationValue, false, { page: 1, order: 'display_name', activeOnly: true }, true));
     dispatch(updateStudioHomeCoursesCustomParams(customParams));
   };
 

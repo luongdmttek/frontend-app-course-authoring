@@ -22,7 +22,7 @@ const slice = createSlice({
       search: undefined,
       order: 'display_name',
       archivedOnly: undefined,
-      activeOnly: true,
+      activeOnly: undefined,
       isFiltered: false,
       cleanFilters: false,
       showCleanFilterButton: false,
@@ -48,7 +48,7 @@ const slice = createSlice({
     },
     fetchCourseDataSuccessV2: (state, { payload }) => {
       const { courses, archivedCourses = [], inProcessCourseActions } = payload.results;
-      const { numPages, count, runList, orgDefaultList } = payload;
+      const { numPages, count } = payload;
       state.studioHomeData.courses = courses;
       state.studioHomeData.archivedCourses = archivedCourses;
       state.studioHomeData.inProcessCourseActions = inProcessCourseActions;

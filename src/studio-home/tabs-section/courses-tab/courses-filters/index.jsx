@@ -148,7 +148,7 @@ const CoursesFilters = ({
       ...customParams
     } = filterParamsFormat;
     dispatch(updateStudioHomeCoursesCustomParams(filterParamsFormat));
-    dispatch(fetchStudioHomeData(locationValue, false, { page: 1, ...customParams }, true));
+    // dispatch(fetchStudioHomeData(locationValue, false, { page: 1, ...customParams }, true));
   };
 
   const handleSearchCourses = (searchValueDebounced) => {

@@ -34,6 +34,12 @@ const CoursesTypesFilterMenu = ({ onItemMenuSelected }) => {
     onItemMenuSelected(courseType);
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      handleCourseTypeSelected('activeCourses');
+    }, 1000);
+  }, [])
+
   return (
     <CoursesFilterMenu
       id="dropdown-toggle-course-type-menu"

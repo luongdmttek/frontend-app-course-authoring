@@ -52,8 +52,6 @@ const slice = createSlice({
       state.studioHomeData.courses = courses;
       state.studioHomeData.archivedCourses = archivedCourses;
       state.studioHomeData.inProcessCourseActions = inProcessCourseActions;
-      state.studioHomeData.runList = runList;
-      state.studioHomeData.orgDefaultList = orgDefaultList;
       state.studioHomeData.numPages = numPages;
       state.studioHomeData.coursesCount = count;
     },

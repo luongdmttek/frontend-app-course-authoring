@@ -54,7 +54,6 @@ const useStudioHome = () => {
     if (courseCreatorSavingStatus === RequestStatus.SUCCESSFUL) {
       dispatch(updateSavingStatuses({ courseCreatorSavingStatus: '' }));
       dispatch(fetchStudioHomeData());
-      dispatch(fetchCourseRunAndOrganization())
     }
   }, [courseCreatorSavingStatus]);
 

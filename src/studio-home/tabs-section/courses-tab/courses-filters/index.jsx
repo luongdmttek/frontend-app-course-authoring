@@ -178,7 +178,7 @@ const CoursesFilters = ({
   };
 
   const handleSearchCoursesDebounced = useCallback(
-    debounce((value) => handleSearchCourses(value), 600),
+    debounce((value) => handleSearchCourses(value), 400),
     [activeOnly, archivedOnly, order, inputSearchValue, orgDefault, run],
   );
 

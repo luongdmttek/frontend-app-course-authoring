@@ -37,7 +37,7 @@ const CoursesTypesFilterMenu = ({ onItemMenuSelected }) => {
   useEffect(() => {
     setTimeout(() => {
       handleCourseTypeSelected('activeCourses');
-    }, 200);
+    });
   }, [])
 
   return (

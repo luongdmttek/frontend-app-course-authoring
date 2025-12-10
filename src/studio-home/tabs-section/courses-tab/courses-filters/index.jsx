@@ -86,8 +86,10 @@ const CoursesFilters = ({
 
   useEffect(() => {
     if(isPaginated) {
-      getCourseRunList();
-      getOrganizationList();
+      setTimeout(() => {
+        getCourseRunList();
+        getOrganizationList();
+      });
     }
   }, [])
 

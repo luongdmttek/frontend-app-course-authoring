@@ -91,7 +91,7 @@ const CoursesFilters = ({
         getOrganizationList();
       });
     }
-  }, [])
+  }, [courseRunList, orgDefaultList])
 
   const objAllCourseRun = (baseFilters) => Object.fromEntries(
     allRunOrderList.map(key => [key.value, {

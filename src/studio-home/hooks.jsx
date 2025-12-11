@@ -46,7 +46,7 @@ const useStudioHome = () => {
     if (isPaginated) {
       const firstPage = 1;
       dispatch(fetchCourseRunAndOrganization())
-      dispatch(fetchStudioHomeData(location.search ?? '', false, { page: firstPage, activeOnly: true, order: 'display_name' }, true));
+      //dispatch(fetchStudioHomeData(location.search ?? '', false, { page: firstPage, activeOnly: true, order: 'display_name' }, true));
     }
   }, []);
 

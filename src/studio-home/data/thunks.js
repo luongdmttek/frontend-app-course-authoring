@@ -106,15 +106,15 @@ function requestCourseCreatorQuery() {
 
 function fetchCourseRunAndOrganization() {
   return async (dispatch) => {
-    dispatch(updateSavingStatuses({ courseCreatorSavingStatus: RequestStatus.PENDING }));
+    dispatch(updateLoadingStatuses({ courseLoadingStatus: RequestStatus.IN_PROGRESS }));
 
     try {
       const data = await getCourseRunAndOrganization();
       dispatch(fetchCourseRunAndOrganizationSuccess(data));
-      dispatch(updateSavingStatuses({ courseCreatorSavingStatus: RequestStatus.SUCCESSFUL }));
+      dispatch(updateLoadingStatuses({ courseLoadingStatus: RequestStatus.SUCCESSFUL }));
       return true;
     } catch (error) {
-      dispatch(updateSavingStatuses({ courseCreatorSavingStatus: RequestStatus.FAILED }));
+      dispatch(updateLoadingStatuses({ courseLoadingStatus: RequestStatus.FAILED }));
       return false;
     }
   };

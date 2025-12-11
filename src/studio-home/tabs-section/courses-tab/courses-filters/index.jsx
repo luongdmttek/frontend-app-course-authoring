@@ -89,7 +89,7 @@ const CoursesFilters = ({
       setTimeout(() => {
         getCourseRunList();
         getOrganizationList();
-      });
+      }, 200);
     }
   }, [])
 

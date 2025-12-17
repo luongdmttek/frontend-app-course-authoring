@@ -69,7 +69,7 @@ const TabsSection = ({
 
   const {
     courses, libraries, archivedCourses,
-    numPages, coursesCount,
+    numPages, coursesCount, courseRun, courseOrgDefault
   } = useSelector(getStudioHomeData);
   const {
     courseLoadingStatus,
@@ -92,6 +92,8 @@ const TabsSection = ({
       >
         <CoursesTab
           coursesDataItems={courses}
+          courseRunList={courseRun}
+          orgDefaultList={courseOrgDefault}
           showNewCourseContainer={showNewCourseContainer}
           onClickNewCourse={onClickNewCourse}
           isShowProcessing={isShowProcessing}

@@ -22,9 +22,12 @@ const slice = createSlice({
       search: undefined,
       order: 'display_name',
       archivedOnly: undefined,
-      activeOnly: undefined,
+      activeOnly: true,
       isFiltered: false,
       cleanFilters: false,
+      showCleanFilterButton: false,
+      orgDefault: undefined,
+      run: undefined,
     },
   },
   reducers: {
@@ -56,6 +59,11 @@ const slice = createSlice({
       const { libraries } = payload;
       state.studioHomeData.libraries = libraries;
     },
+    fetchCourseRunAndOrganizationSuccess: (state, { payload }) => {
+      const { courseRun, courseOrgDefault } = payload.data;
+      state.studioHomeData.courseRun = courseRun;
+      state.studioHomeData.courseOrgDefault = courseOrgDefault;
+    },
     updateStudioHomeCoursesCustomParams: (state, { payload }) => {
       Object.assign(state.studioHomeCoursesRequestParams, payload);
     },
@@ -70,6 +78,7 @@ export const {
   fetchCourseDataSuccessV2,
   fetchLibraryDataSuccess,
   updateStudioHomeCoursesCustomParams,
+  fetchCourseRunAndOrganizationSuccess,
 } = slice.actions;
 
 export const {

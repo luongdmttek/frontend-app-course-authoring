@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
@@ -34,12 +34,19 @@ const CoursesTypesFilterMenu = ({ onItemMenuSelected }) => {
     onItemMenuSelected(courseType);
   };
 
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     handleCourseTypeSelected('activeCourses');
+  //   });
+  // }, [])
+
   return (
     <CoursesFilterMenu
       id="dropdown-toggle-course-type-menu"
       menuItems={courseTypes}
       onItemMenuSelected={handleCourseTypeSelected}
-      defaultItemSelectedText={intl.formatMessage(messages.coursesTypesFilterMenuAllCurses)}
+      defaultItemSelectedText={intl.formatMessage(messages.coursesTypesFilterMenuActiveCurses)}
+      useCustomMenu={false}
     />
   );
 };

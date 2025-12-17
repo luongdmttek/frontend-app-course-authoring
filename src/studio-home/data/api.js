@@ -59,3 +59,12 @@ export async function sendRequestForCourseCreator() {
   const { data } = await getAuthenticatedHttpClient().post(getRequestCourseCreatorUrl());
   return camelCaseObject(data);
 }
+
+/**
+ * Send request to course access for organization and course run in studio home data.
+ * @returns {Promise<Object>}
+ */
+export async function getCourseRunAndOrganization() {
+  const { data } = await getAuthenticatedHttpClient().get(`${getApiBaseUrl()}/api/contentstore/v2/home/filterdata`);
+  return camelCaseObject(data);
+}

@@ -1,3 +1,11 @@
 .courses-tab-container {
   min-height: 80vh;
 }
+
+.btn-icon-inverse-primary-active {
+  background-color: transparent !important;
+
+  &:focus {
+    box-shadow: none !important;
+  }
+}

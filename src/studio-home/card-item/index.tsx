@@ -21,6 +21,7 @@ import { trimSlashes } from './utils';
 interface BaseProps {
   displayName: string;
   org: string;
+  orgDefault: string;
   number: string;
   run?: string;
   lmsLink?: string | null;
@@ -47,6 +48,7 @@ const CardItem: React.FC<Props> = ({
   lmsLink = '',
   rerunLink = '',
   org,
+  orgDefault,
   number,
   run = '',
   isLibraries = false,
@@ -68,7 +70,7 @@ const CardItem: React.FC<Props> = ({
       ? url
       : new URL(url, getConfig().STUDIO_BASE_URL).toString()
   );
-  const subtitle = isLibraries ? `${org} / ${number}` : `${org} / ${number} / ${run}`;
+  const subtitle = isLibraries ? `${org} / ${number}` : `${orgDefault} / ${number} / ${run}`;
   const readOnlyItem = !(lmsLink || rerunLink || url || path);
   const showActions = !(readOnlyItem || isLibraries);
   const isShowRerunLink = allowCourseReruns

@@ -8,8 +8,9 @@ import {
   Pagination,
   Alert,
   Button,
+  IconButton,
 } from '@openedx/paragon';
-import { Error } from '@openedx/paragon/icons';
+import { Error, Close } from '@openedx/paragon/icons';
 
 import { COURSE_CREATOR_STATES } from '../../../constants';
 import { getStudioHomeData, getStudioHomeCoursesParams } from '../../data/selectors';
@@ -32,6 +33,7 @@ interface Props {
     lmsLink: string | null;
     number: string;
     org: string;
+    orgDefault: string;
     rerunLink: string | null;
     run: string;
     url: string;
@@ -43,6 +45,12 @@ interface Props {
   isFailed: boolean;
   numPages: number;
   coursesCount: number;
+  courseRunList: {
+    run: string,
+  };
+  orgDefaultList: {
+    orgDefault: string,
+  };
   isEnabledPagination?: boolean;
 }
 
@@ -55,6 +63,8 @@ const CoursesTab: React.FC<Props> = ({
   isFailed,
   numPages = 0,
   coursesCount = 0,
+  courseRunList,
+  orgDefaultList,
   isEnabledPagination = false,
 }) => {
   const dispatch = useDispatch();
@@ -65,7 +75,7 @@ const CoursesTab: React.FC<Props> = ({
     optimizationEnabled,
   } = useSelector(getStudioHomeData);
   const studioHomeCoursesParams = useSelector(getStudioHomeCoursesParams);
-  const { currentPage, isFiltered } = studioHomeCoursesParams;
+  const { currentPage, isFiltered, showCleanFilterButton } = studioHomeCoursesParams;
   const hasAbilityToCreateCourse = courseCreatorStatus === COURSE_CREATOR_STATES.granted;
   const showCollapsible = [
     COURSE_CREATOR_STATES.denied,
@@ -80,6 +90,8 @@ const CoursesTab: React.FC<Props> = ({
       order,
       archivedOnly,
       activeOnly,
+      orgDefault,
+      run,
     } = studioHomeCoursesParams;
 
     const customParams = {
@@ -87,8 +99,9 @@ const CoursesTab: React.FC<Props> = ({
       order,
       archivedOnly,
       activeOnly,
+      orgDefault,
+      run,
     };
-
     dispatch(fetchStudioHomeData(locationValue, false, { page, ...customParams }, true));
     dispatch(updateStudioHomeCoursesCustomParams({ currentPage: page, isFiltered: true }));
   };
@@ -99,12 +112,14 @@ const CoursesTab: React.FC<Props> = ({
       search: undefined,
       order: 'display_name',
       isFiltered: true,
+      showCleanFilterButton: false,
       cleanFilters: true,
       archivedOnly: undefined,
-      activeOnly: undefined,
+      activeOnly: true,
+      orgDefault: undefined,
+      run: undefined,
     };
-
-    dispatch(fetchStudioHomeData(locationValue, false, { page: 1, order: 'display_name' }, true));
+    // dispatch(fetchStudioHomeData(locationValue, false, { page: 1, order: 'display_name', activeOnly: true }, true));
     dispatch(updateStudioHomeCoursesCustomParams(customParams));
   };
 
@@ -135,10 +150,30 @@ const CoursesTab: React.FC<Props> = ({
         {isShowProcessing && !isEnabledPagination && <ProcessingCourses />}
         {isEnabledPagination && (
           <div className="d-flex flex-row justify-content-between my-4">
-            <CoursesFilters dispatch={dispatch} locationValue={locationValue} isLoading={isLoading} />
-            <p data-testid="pagination-info">
+            <CoursesFilters
+              dispatch={dispatch} 
+              locationValue={locationValue} 
+              isLoading={isLoading} 
+              coursesDataItems={coursesDataItems} 
+              courseRunList={courseRunList} 
+              orgDefaultList={orgDefaultList} />
+            {showCleanFilterButton && !isLoading && (
+              <div className="my-1 mr-2">
+                <IconButton 
+                isActive
+                invertColors
+                iconAs={Icon}
+                key="primary" 
+                src={Close}
+                alt="Close" 
+                size="sm"
+                onClick={handleCleanFilters} 
+                variant="primary" />
+              </div>
+            )}
+            <p data-testid="pagination-info" className='my-2'>
               {intl.formatMessage(messages.coursesPaginationInfo, {
-                length: coursesDataItems.length,
+                length: coursesCount < 10 ? coursesCount%10 : (currentPage-1)*10 + coursesDataItems.length,
                 total: coursesCount,
               })}
             </p>
@@ -151,6 +186,7 @@ const CoursesTab: React.FC<Props> = ({
                 courseKey,
                 displayName,
                 lmsLink,
+                orgDefault,
                 org,
                 rerunLink,
                 number,
@@ -163,6 +199,7 @@ const CoursesTab: React.FC<Props> = ({
                   displayName={displayName}
                   lmsLink={lmsLink}
                   rerunLink={rerunLink}
+                  orgDefault={orgDefault}
                   org={org}
                   number={number}
                   run={run}

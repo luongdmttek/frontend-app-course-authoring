@@ -6,7 +6,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { RequestStatus } from '../data/constants';
 import { COURSE_CREATOR_STATES } from '../constants';
 import { getCourseData, getSavingStatus } from '../generic/data/selectors';
-import { fetchStudioHomeData } from './data/thunks';
+import { fetchStudioHomeData, fetchCourseRunAndOrganization } from './data/thunks';
 import { fetchWaffleFlags } from '../data/thunks';
 import {
   getLoadingStatuses,
@@ -14,7 +14,7 @@ import {
   getStudioHomeData,
   getStudioHomeCoursesParams,
 } from './data/selectors';
-import { updateSavingStatuses } from './data/slice';
+import { updateSavingStatuses, updateStudioHomeCoursesCustomParams } from './data/slice';
 
 const useStudioHome = () => {
   const location = useLocation();
@@ -45,7 +45,8 @@ const useStudioHome = () => {
   useEffect(() => {
     if (isPaginated) {
       const firstPage = 1;
-      dispatch(fetchStudioHomeData(location.search ?? '', false, { page: firstPage, order: 'display_name' }, true));
+      dispatch(fetchCourseRunAndOrganization())
+      // dispatch(fetchStudioHomeData(location.search ?? '', false, { page: firstPage, order: 'display_name', activeOnly: true }, true));
     }
   }, []);
 

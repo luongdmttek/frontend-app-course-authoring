@@ -1,8 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { SearchField } from '@openedx/paragon';
 import { debounce } from 'lodash';
+import { useIntl } from '@edx/frontend-platform/i18n';
+import { getConfig } from '@edx/frontend-platform';
 
 import { getStudioHomeCoursesParams } from '../../../data/selectors';
 import { updateStudioHomeCoursesCustomParams } from '../../../data/slice';
@@ -11,6 +13,10 @@ import { LoadingSpinner } from '../../../../generic/Loading';
 import CoursesTypesFilterMenu from './courses-types-filter-menu';
 import CoursesOrderFilterMenu from './courses-order-filter-menu';
 import './index.scss';
+import CoursesOrgFilterMenu from './courses-org-filter-menu';
+import CoursesRunFilterMenu from './courses-run-filter-menu';
+import messagesOrgFilter from './courses-org-filter-menu/messages';
+import messagesRunFilter from './courses-run-filter-menu/messages';
 
 /* regex to check if a string has only whitespace
   example "    "
@@ -22,16 +28,84 @@ const CoursesFilters = ({
   locationValue,
   onSubmitSearchField,
   isLoading,
+  coursesDataItems,
+  courseRunList,
+  orgDefaultList,
 }) => {
+  const intl = useIntl();
+  const isPaginated = getConfig().ENABLE_HOME_PAGE_COURSE_API_V2;
+  const [allOrgOrderList, setAllOrgOrderList] = useState([]);
+  const [allRunOrderList, setAllRunOrderList] = useState([]);
   const studioHomeCoursesParams = useSelector(getStudioHomeCoursesParams);
   const {
+    run,
     order,
     search,
     activeOnly,
     archivedOnly,
+    orgDefault,
     cleanFilters,
+    showCleanFilterButton,
   } = studioHomeCoursesParams;
   const [inputSearchValue, setInputSearchValue] = useState('');
+
+
+  function getOrganizationList() {
+    const orgList = orgDefaultList
+    .map(item => ({
+      id: item,
+      name: item,
+      value: item
+    }));
+
+    setAllOrgOrderList([
+      {
+        id: 'all_organization',
+        name: `${intl.formatMessage(messagesOrgFilter.coursesOrgFilterMenuAllOrganization)}`, //'All organization',
+        value: 'allOrganization'
+      },
+      ...orgList
+    ])
+  }
+
+  function getCourseRunList() {
+    const runList = courseRunList
+    .map(item => ({
+      id: item,
+      name: item,
+      value: item
+    }));
+  
+    setAllRunOrderList([
+      {
+        id: 'all_course_run',
+        name: `${intl.formatMessage(messagesRunFilter.coursesRunFilterMenuAll)}`, //'All courses run',
+        value: 'allCourseRun'
+      },
+      ...runList
+    ])
+  }
+
+  useEffect(() => {
+    if(isPaginated) {
+      getCourseRunList();
+      getOrganizationList();
+    }
+  }, [courseRunList, orgDefaultList])
+
+  const objAllOrganization = (baseFilters) => Object.fromEntries(
+    allOrgOrderList.map(key => [key.value, {
+      ...baseFilters,
+      orgDefault: key.value == 'allOrganization' ? undefined : key.value,
+    }]),
+  )
+
+  const objAllCourseRun = (baseFilters) => Object.fromEntries(
+    allRunOrderList.map(key => [key.value, {
+      ...baseFilters,
+      run: key.value == 'allCourseRun' ? undefined : key.value,
+    }]),
+  )
 
   const getFilterTypeData = (baseFilters) => ({
     archivedCourses: { ...baseFilters, archivedOnly: true, activeOnly: undefined },
@@ -41,6 +115,8 @@ const CoursesFilters = ({
     zaCourses: { ...baseFilters, order: '-display_name' },
     newestCourses: { ...baseFilters, order: '-created' },
     oldestCourses: { ...baseFilters, order: 'created' },
+    allOrganization: { ...baseFilters, orgDefault: undefined },
+    allCourseRun: { ...baseFilters, run: undefined },
   });
 
   const handleMenuFilterItemSelected = (filterType) => {
@@ -52,9 +128,16 @@ const CoursesFilters = ({
       archivedOnly,
       activeOnly,
       cleanFilters: false,
+      orgDefault,
+      run,
     };
 
-    const filterParams = getFilterTypeData(baseFilters);
+    const getFilterTypeAllData = (baseFilters) => Object.assign(
+      getFilterTypeData(baseFilters),
+      objAllCourseRun(baseFilters),
+      objAllOrganization(baseFilters)
+    );
+    const filterParams = getFilterTypeAllData(baseFilters);
     const filterParamsFormat = filterParams[filterType] || baseFilters;
     const {
       coursesOrderLabel,
@@ -66,7 +149,7 @@ const CoursesFilters = ({
       ...customParams
     } = filterParamsFormat;
     dispatch(updateStudioHomeCoursesCustomParams(filterParamsFormat));
-    dispatch(fetchStudioHomeData(locationValue, false, { page: 1, ...customParams }, true));
+    // dispatch(fetchStudioHomeData(locationValue, false, { page: 1, ...customParams }, true));
   };
 
   const handleSearchCourses = (searchValueDebounced) => {
@@ -76,27 +159,58 @@ const CoursesFilters = ({
       activeOnly,
       archivedOnly,
       order,
+      orgDefault,
+      run,
+      showCleanFilterButton,
     };
     const hasOnlySpaces = regexOnlyWhiteSpaces.test(searchValueDebounced);
-
-    if (valueFormatted !== search && !hasOnlySpaces && !cleanFilters) {
+    if (!hasOnlySpaces) {
       dispatch(updateStudioHomeCoursesCustomParams({
         currentPage: 1,
         isFiltered: true,
         cleanFilters: false,
+        orgDefault,
+        run,
         ...filterParams,
       }));
-
       dispatch(fetchStudioHomeData(locationValue, false, { page: 1, ...filterParams }, true));
     }
-
     setInputSearchValue(searchValueDebounced);
   };
 
   const handleSearchCoursesDebounced = useCallback(
     debounce((value) => handleSearchCourses(value), 400),
-    [activeOnly, archivedOnly, order, inputSearchValue],
+    [activeOnly, archivedOnly, order, inputSearchValue, orgDefault, run],
   );
+
+  useEffect(() => {
+    return () => {
+      dispatch(updateStudioHomeCoursesCustomParams({
+        activeOnly: true,
+        order: 'display_name',
+        orgDefault: undefined,
+        run: undefined,
+        showCleanFilterButton: false,
+      }));
+      handleSearchCoursesDebounced.cancel(); // cleanup
+    };
+  }, 
+  // [handleSearchCoursesDebounced]);
+  []);
+
+  const handleClearSearch = () => {
+    // setInputSearchValue('');
+    const filterParams = {
+      search,
+      activeOnly,
+      archivedOnly,
+      order,
+      orgDefault,
+      run,
+    };
+    dispatch(updateStudioHomeCoursesCustomParams(filterParams));
+    // dispatch(fetchStudioHomeData(locationValue, false, { page: 1, ...filterParams  }, true));
+  }
 
   return (
     <div className="d-flex">
@@ -104,6 +218,7 @@ const CoursesFilters = ({
         <SearchField
           onSubmit={onSubmitSearchField}
           onChange={handleSearchCoursesDebounced}
+          onClear={handleClearSearch}
           value={cleanFilters ? '' : inputSearchValue}
           className="mr-4"
           data-testid="input-filter-courses-search"
@@ -118,6 +233,12 @@ const CoursesFilters = ({
 
       <CoursesTypesFilterMenu onItemMenuSelected={handleMenuFilterItemSelected} />
       <CoursesOrderFilterMenu onItemMenuSelected={handleMenuFilterItemSelected} />
+      {isPaginated && 
+        <>
+          <CoursesOrgFilterMenu onItemMenuSelected={handleMenuFilterItemSelected} filterOrgData={allOrgOrderList} />
+          <CoursesRunFilterMenu onItemMenuSelected={handleMenuFilterItemSelected} filterRunData={allRunOrderList} />
+        </>
+      }
     </div>
   );
 };
